@@ -29,7 +29,7 @@ export class UserService {
     return user;
   }
 
-  async updateMe(email: string, updateUserDto: UpdateUserDto) {
+  updateMe(email: string, updateUserDto: UpdateUserDto) {
     return this.usersRepository.update({ email }, updateUserDto);
   }
 

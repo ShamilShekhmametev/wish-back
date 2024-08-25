@@ -1,4 +1,4 @@
 export class AuthDto {
-  id: number;
+  id: string;
   email: string;
 }

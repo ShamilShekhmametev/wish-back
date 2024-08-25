@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtGuard } from './guards/jwt.guard';
+import { WishModule } from './wish/wish.module';
 
 const globalGuard = {
   provide: APP_GUARD,
@@ -32,6 +33,7 @@ const globalGuard = {
     }),
     UserModule,
     AuthModule,
+    WishModule,
   ],
   controllers: [AppController],
   providers: [AppService, globalGuard],
