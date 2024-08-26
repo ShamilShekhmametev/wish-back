@@ -1,3 +1,4 @@
+import { Event } from '../../event/entities/event.entity';
 import { User } from '../../user/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -13,11 +14,11 @@ export class Wish {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
+  @Column({ default: 'wish' })
   name: string;
 
-  @Column()
-  event: string;
+  @ManyToOne(() => Event)
+  event: Event;
 
   @ManyToOne(() => User)
   user: User;

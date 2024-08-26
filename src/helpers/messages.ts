@@ -7,4 +7,7 @@ export const RESPONSE_MESSAGES = {
   WISH_CREATED: 'Wish successfully created',
   WISH_UPDATED: 'Wish successfully updated',
   WISH_DELETED: 'Wish successfully deleted',
+  EVENT_CREATED: 'Event successfully created',
+  EVENT_UPDATED: 'Event successfully updated',
+  EVENT_DELETED: 'Wish successfully deleted',
 };

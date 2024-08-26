@@ -15,7 +15,13 @@ export class WishService {
 
   async create(createWishDto: CreateWishDto, userId: string) {
     const wish = await this.wishesRepository.save({
-      ...createWishDto,
+      name: createWishDto.name,
+      event: { id: createWishDto.event },
+      reserved: createWishDto.reserved,
+      link: createWishDto.link,
+      price: createWishDto.price,
+      emoji: createWishDto.emoji,
+      priority: createWishDto.priority,
       user: { id: userId },
     });
     return wish;
@@ -24,10 +30,10 @@ export class WishService {
   async find(findWishDto: FindWishDto) {
     const wishes = await this.wishesRepository.find({
       where: {
-        ...findWishDto,
-        user: {
-          id: findWishDto.user,
-        },
+        name: findWishDto.name,
+        event: { id: findWishDto.event },
+        reserved: findWishDto.reserved,
+        user: { id: findWishDto.user },
       },
     });
     return wishes;
@@ -43,7 +49,18 @@ export class WishService {
   }
 
   update(id: string, updateWishDto: UpdateWishDto) {
-    return this.wishesRepository.update({ id }, updateWishDto);
+    return this.wishesRepository.update(
+      { id },
+      {
+        name: updateWishDto.name,
+        event: { id: updateWishDto.event },
+        reserved: updateWishDto.reserved,
+        link: updateWishDto.link,
+        price: updateWishDto.price,
+        emoji: updateWishDto.emoji,
+        priority: updateWishDto.priority,
+      },
+    );
   }
 
   remove(id: string) {
