@@ -25,7 +25,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
-import { getUniqAvatarName } from './helpers/utils';
+import { getUniqAvatarName, isUniqueEmailError } from './helpers/utils';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('user')
 export class UserController {
@@ -37,6 +38,7 @@ export class UserController {
     this.dirImagesPath = this.configService.get('IMAGES_PATH');
   }
 
+  @Public()
   @Post()
   @UsePipes(new ZodValidationPipe(createUserSchema))
   async register(@Body() createUserDto: CreateUserDto) {
@@ -47,8 +49,9 @@ export class UserController {
         message: RESPONSE_MESSAGES.USER_REGISTERED,
       };
     } catch (error) {
-      console.log(error);
-      throw new HttpException(error.message, error.status);
+      if (isUniqueEmailError(error))
+        error.message = { email: 'Этот Email уже используется' };
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -108,7 +111,7 @@ export class UserController {
       const me = await this.userService.findOne(user.email);
       fs.writeFileSync(path, file.buffer);
       await this.userService.updateMe(user.email, { avatar: path });
-      if (fs.existsSync(me.avatar)) fs.unlinkSync(me.avatar);
+      if (me.avatar && fs.existsSync(me.avatar)) fs.unlinkSync(me.avatar);
 
       return {
         statusCode: HttpStatus.OK,
@@ -127,7 +130,7 @@ export class UserController {
 
       const me = await this.userService.findOne(user.email);
       await this.userService.updateMe(user.email, { avatar: null });
-      if (fs.existsSync(me.avatar)) fs.unlinkSync(me.avatar);
+      if (me.avatar && fs.existsSync(me.avatar)) fs.unlinkSync(me.avatar);
 
       return {
         statusCode: HttpStatus.OK,
